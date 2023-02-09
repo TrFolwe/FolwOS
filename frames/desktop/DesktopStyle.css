@@ -1,0 +1,190 @@
+body {
+    background-image: url("https://rare-gallery.com/thumbnail/80796-linux-computer-hd-4k.jpg");
+    background-size: 100% 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 100vh;
+    overflow: hidden;
+    padding: 5px;
+}
+
+.desktop-shortcuts {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    height: 96vh;
+    width: 20%;
+    gap: 5px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    font-family: sans-serif;
+}
+
+.folder-main {
+    cursor: pointer;
+    transition: all 500ms;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    box-sizing: border-box;
+    padding: 10px;
+    user-select: none;
+    border-radius: 2px;
+}
+
+.folder-main:hover,
+.folder-main[selected] {
+    background-color: rgb(135, 206, 235, 0.6);
+    border: 1px solid white;
+}
+
+.folder-main .folder-parent {
+
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 96%;
+    height: 96%;
+}
+
+.folder-main img {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.options-modal {
+    width: 250px;
+    height: auto;
+    background-color: #222;
+    border: 1px solid white;
+    z-index: 2;
+    color: white;
+}
+
+.options-modal li {
+    border-bottom: 1px solid white;
+    max-width: 100%;
+    padding: 5px 10px;
+    display: block;
+    margin: 10px;
+    transition: all 250ms;
+    position: relative;
+    display: block;
+    box-sizing: border-box;
+    user-select: none;
+    cursor: pointer;
+}
+
+.options-modal li:hover {
+    background-color: rgb(204, 204, 204, 0.4);
+}
+
+.file-wiever-modal {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 50%;
+    height: 50%;
+    background-color: #222;
+    color: white;
+    box-sizing: border-box;
+    padding: 15px;
+    /*transition: all 500ms;*/
+}
+
+.file-wiever-modal .folder-name {
+    padding: 5px;
+}
+
+.file-wiever-modal .folder-actions {
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: flex;
+    user-select: none;
+}
+
+.file-wiever-modal .folder-actions * {
+    user-select: none;
+}
+
+.file-wiever-modal .main-elements {
+    margin: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 65%;
+    justify-content: center;
+    gap: 10px;
+}
+
+.file-wiever-modal .main-elements .languages select {
+    background-color: #ccc;
+    border-radius: 25px;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.file-wiever-modal .main-elements .languages button.save-btn {
+    border: none;
+    background-color: #ccc;
+    padding: 10px 20px;
+    border-radius: 25px;
+    cursor: pointer;
+    width: 86%;
+}
+
+.file-wiever-modal .folder-actions>div {
+    position: relative;
+    width: 45px;
+    height: 45px;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    transition: all 250ms;
+}
+
+.file-wiever-modal .folder-actions>div:not(.close-btn):hover {
+    background-color: rgb(204, 204, 204, 0.5);
+}
+
+.file-wiever-modal .folder-actions>div.close-btn:hover {
+    background-color: rgb(208, 2, 2);
+}
+
+.file-wiever-modal .folder-actions img {
+    width: 65%;
+    height: 65%;
+}
+
+.file-wiever-modal .resizer {
+    position: absolute;
+    top: 0;
+}
+
+.file-wiever-modal .resizer.vertical {
+    right: 0;
+    height: 100%;
+    width: 5px;
+    cursor: e-resize;
+}
+
+.file-wiever-modal .resizer.horizontal {
+    left: 0;
+    width: 100%;
+    height: 5px;
+    cursor: n-resize
+}

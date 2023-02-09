@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="DesktopStyle.css">
+</head>
+
+<body>
+    <div class="desktop-shortcuts">
+        <div class="folder-main" private-folder="settings">
+            <div class="folder-parent">
+                <img src="https://cdn0.iconfinder.com/data/icons/apple-apps/100/Apple_Settings-512.png"
+                    alt="folder-settings">
+                <h5 class="folder-name">Settings</h5>
+            </div>
+        </div>
+        <div class="folder-main" private-folder="change-background">
+            <div class="folder-parent">
+                <img src="https://cdn3.iconfinder.com/data/icons/user-interface-filled-line/2048/5724_-_Reload_Image-256.png"
+                    alt="folder-settings">
+                <h5 class="folder-name">Change background image</h5>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js"
+        integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+    <script src="../utils/ElementResizable.js"></script>
+    <script>
+        if (!localStorage.getItem("settings")) {
+            localStorage.setItem("settings", JSON.stringify({
+                "language": "tr"
+            }));
+        }
+
+        const FOLDER_COUNT = 30;
+        let innerHTML = '';
+        let isActiveCTRL = false;
+        const bodyInnerHTML = document.querySelector(".desktop-shortcuts").innerHTML;
+        for (let i = 0; i <= FOLDER_COUNT; i++) {
+            innerHTML += `<div index="${i}" class="folder-main">
+        <div class="folder-parent">
+            <img src="https://winaero.com/blog/wp-content/uploads/2018/11/folder-icon-big-256.png" alt="folder-img">
+            <h5 style="font-size: 12px;" class="folder-name">Folder${i}</h5>
+        </div>
+    </div>`;
+        }
+        document.querySelector(".desktop-shortcuts").innerHTML = innerHTML + bodyInnerHTML;
+        const folderRightClick = e => {
+            e.preventDefault();
+            const { clientX, clientY, srcElement, target } = e;
+            const optionsModalS = `
+                <ul style="position: absolute; left: ${clientX}px; top: ${clientY}px" class="options-modal">
+                    <li><b>Aç</b></li>
+                    <li>Hızlı erişime sabitle</li>
+                </ul>
+                `;
+            const optionsModalE = document.querySelector(".options-modal")
+            if (!optionsModalE) document.querySelector("body").innerHTML += optionsModalS;
+            else {
+                document.querySelector("body").removeChild(optionsModalE);
+                document.querySelector("body").innerHTML += optionsModalS;
+            }
+            folderAddListeners();
+        }
+
+        const languages = {
+            "tr": "Türkçe",
+            "en": "İngilizce"
+        };
+
+        const folderDblClick = folder => {
+            //private folders
+            document.querySelector("body").innerHTML += `
+                <div class="file-wiever-modal">
+        <h4 class="folder-name">${folder.querySelector(".folder-name").innerHTML}</h4>
+        <hr style="width: 86%;">
+        <div class="folder-actions">
+            <div class="resize-btn">
+                <img src="https://cdn-icons-png.flaticon.com/128/5345/5345019.png" alt="">
+            </div>
+            <div class="close-btn">
+                <img src="https://img.icons8.com/color/256/delete-sign.png" alt="">
+            </div>
+        </div>
+        <div class="main-elements">
+        ${(() => {
+                    if (folder.hasAttribute("private-folder")) {
+                        switch (folder.getAttribute("private-folder")) {
+                            case "settings":
+                                return `
+                                <div class="languages">
+                                <label for="languages">Languages: </label>
+                                <select class="languages-list">
+                                    ${(() => {
+                                        let innerHTML = '';
+                                        for (let key in languages) {
+                                            innerHTML += `<option ${JSON.parse(localStorage.getItem("settings")).language === key ? "selected" : ''} value="${key}">${languages[key]}</option>`;
+                                        }
+                                        return innerHTML;
+                                    })()}
+                                </select>
+                            </div>
+                                `;
+                            case "change-background":
+                                return `
+                                <div class="img-area">
+                                
+                                    </div>
+                                `;
+                        }
+                    }
+                    return '';
+                })()
+                }
+                <button class="save-btn">SAVE</button>
+                </div>
+        <div class="resizer vertical"></div>
+        <div class="resizer horizontal"></div>
+    </div>`;
+            const fileViewModal = document.querySelector(".file-wiever-modal");
+            fileViewModal.querySelector(".resize-btn").addEventListener("click", () => resizeView(fileViewModal));
+            fileViewModal.querySelector(".close-btn").addEventListener("click", () => document.querySelector("body").removeChild(fileViewModal));
+            setResizableElement(fileViewModal);
+            folderAddListeners();
+        }
+
+        const resizeView = fileViewModal => {
+            let addWillStyle;
+            if (!fileViewModal.hasAttribute("full-screen")) {
+                addWillStyle = {
+                    "width": "100%",
+                    "height": "100%",
+                    "left": "0",
+                    "top": "0",
+                    "transform": "translate(0, 0)"
+                };
+                fileViewModal.setAttribute("full-screen", "");
+            } else {
+                addWillStyle = {
+                    "width": "50%",
+                    "height": "50%",
+                    "left": "50%",
+                    "top": "50%",
+                    "transform": "translate(-50%, -50%)"
+                };
+                fileViewModal.removeAttribute("full-screen");
+            }
+            Object.entries(addWillStyle).forEach(willStyle => fileViewModal.style[willStyle[0]] = willStyle[1])
+        }
+
+        const folderAddListeners = () => {
+            document.querySelectorAll(".folder-main").forEach(folder => {
+                folder.addEventListener("contextmenu", folderRightClick);
+                folder.addEventListener("dblclick", () => folderDblClick(folder));
+                folder.addEventListener("click", () => {
+                    if (!folder.hasAttribute("selected")) folder.setAttribute("selected", "");
+                    else folder.removeAttribute("selected");
+                    if (!isActiveCTRL) {
+                        Array.from(document.querySelectorAll(".folder-main")).filter(foldr => !foldr.isEqualNode(folder) && foldr.hasAttribute("selected")).forEach(i =>
+                            i.removeAttribute("selected")
+                        )
+                    }
+                });
+            });
+        }
+        document.addEventListener("keydown", keyEvent => {
+            const { keyCode } = keyEvent;
+            console.log(keyCode)
+            if (keyCode === 17) isActiveCTRL = true;
+            if (isActiveCTRL && keyCode === 65) {
+                Array.from(document.querySelectorAll(".folder-main")).forEach(folder => folder.setAttribute("selected", ""))
+            }
+            if (keyCode === 46) { //DELETE
+                const selectedFolders = Array.from(document.querySelectorAll(".folder-main")).filter(folder => folder.hasAttribute("selected"));
+                selectedFolders.forEach(fldr => {
+                    $(fldr).fadeOut(500);
+                })
+            }
+        });
+        document.addEventListener("keyup", keyEvent => {
+            const { keyCode } = keyEvent;
+            if (keyCode === 17) isActiveCTRL = false; //CTRL
+        });
+        folderAddListeners();
+    </script>
+</body>
+
+</html>

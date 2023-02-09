@@ -1,0 +1,56 @@
+* {
+    font-family: sans-serif;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+.task-mngr {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background-color: #101010;
+    width: 100%;
+    height: 6%;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+}
+
+.task-mngr img {
+    height: 60%;
+}
+
+.task-mngr>.task-shortcut {
+    width: 50px;
+    height: 100%;
+    position: relative;
+    cursor: pointer;
+    transition: all 250ms;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.task-mngr>.task-shortcut::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    background-color: #ADFF2F;
+}
+
+.task-mngr>.task-shortcut:hover {
+    background-color: #333333;
+}
+
+iframe.windows-frame {
+    left: 0;
+    top: 0;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    height: calc(100% - 5%);
+}
